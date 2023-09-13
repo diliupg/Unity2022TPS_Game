@@ -7,7 +7,7 @@ public class AimStateManager : MonoBehaviour
 {
     public Cinemachine.AxisState xAxis, yAxis;
     [SerializeField] Transform camFollowPos;
-
+ 
     void Start()
     {
         
