@@ -1,12 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic;   
 using UnityEngine;
 
 public class MovementStateManager : MonoBehaviour
 {
-    public float moveSpeed = 3f;
+    public float currentMoveSpeed = 3f;
+    public float walkSpeed = 3, walkBackSpeed = 2;
+    public float runSpeed = 7, runBackSpeed = 5;
+    public float crouchSpeed = 2, crouchBackSpeed = 1;
+
     [HideInInspector] public Vector3 dir;
-    float hzInput, vInput;
+    [HideInInspector] public float hzInput, vInput;
     CharacterController controller;
 
     [SerializeField] float groundYOffset;
@@ -18,15 +22,36 @@ public class MovementStateManager : MonoBehaviour
 
     [SerializeField] private Color color = Color.red;
 
+    MovementBaseState currentState;
+
+    public IdleState Idle = new IdleState();
+    public WalkState Walk = new WalkState();
+    public CrouchState Crouch = new CrouchState();
+    public RunState Run = new RunState();
+
+    [HideInInspector] public Animator animator;
+
     void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
+        SwitchState(Idle);
     }
 
     void Update()
     {
         GetDirectionAndMove();
         Gravity();
+
+        animator.SetFloat("hzInput", hzInput);
+        animator.SetFloat("vInput", vInput);
+        currentState.UpdateState(this);
+    }
+
+    public void SwitchState(MovementBaseState state)
+    {
+        currentState = state;
+        currentState.EnterState(this);
     }
 
     void GetDirectionAndMove()
@@ -36,7 +61,7 @@ public class MovementStateManager : MonoBehaviour
 
         dir = transform.forward * vInput + transform.right * hzInput;
 
-        controller.Move(dir * moveSpeed * Time.deltaTime);
+        controller.Move(dir.normalized * currentMoveSpeed * Time.deltaTime);
     }
 
     bool IsGrounded()
