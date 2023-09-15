@@ -5,9 +5,9 @@ using UnityEngine;
 public class MovementStateManager : MonoBehaviour
 {
     public float currentMoveSpeed = 3f;
-    public float walkSpeed = 3, walkBackSpeed = 2;
-    public float runSpeed = 7, runBackSpeed = 5;
-    public float crouchSpeed = 2, crouchBackSpeed = 1;
+    public float walkSpeed = 3f, walkBackSpeed = 2f;
+    public float runSpeed = 7f, runBackSpeed = 5f;
+    public float crouchSpeed = 2f, crouchBackSpeed = 1f;
 
     [HideInInspector] public Vector3 dir;
     [HideInInspector] public float hzInput, vInput;
@@ -15,7 +15,7 @@ public class MovementStateManager : MonoBehaviour
 
     [SerializeField] float groundYOffset;
     [SerializeField] LayerMask groundMask;
-    Vector3 spherePos;
+    public Vector3 spherePos;
 
     [SerializeField] float gravity = -9.81f;
     Vector3 velocity;
@@ -82,6 +82,6 @@ public class MovementStateManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = color;
-        Gizmos.DrawWireSphere(spherePos, controller.radius - 0.05f); 
+        Gizmos.DrawWireSphere(spherePos, controller.radius - 0.05f);
     }
 }
