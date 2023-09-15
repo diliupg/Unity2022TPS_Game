@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 
 public class AimStateManager : MonoBehaviour
 {
@@ -14,9 +14,17 @@ public class AimStateManager : MonoBehaviour
     public AimState Aim = new AimState();
 
     [HideInInspector] public Animator animator;
+    [HideInInspector] public CinemachineVirtualCamera vCam;
+    [HideInInspector] public float hipFov;
+    [HideInInspector] public float currentFov;
+    public float fovSmoothSpeed = 10f;
+    public float adsFov = 40f;
+
 
     void Start()
     {
+        vCam = GetComponentInChildren<CinemachineVirtualCamera>();
+        hipFov = vCam.m_Lens.FieldOfView;
         animator = GetComponentInChildren<Animator>();
         SwitchState(Hip);
     }
@@ -27,6 +35,7 @@ public class AimStateManager : MonoBehaviour
         yAxis -= Input.GetAxisRaw("Mouse Y") * mouseSense;
         yAxis = Mathf.Clamp(yAxis, -80, 80);
 
+        vCam.m_Lens.FieldOfView = Mathf.Lerp(vCam.m_Lens.FieldOfView, currentFov, fovSmoothSpeed * Time.deltaTime);
         currentState.UpdateState(this);
 
     }
